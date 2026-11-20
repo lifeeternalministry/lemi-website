@@ -3,6 +3,11 @@
 import { stripeFor, SITE_URL, json } from "../lib/stripe-accounts.mjs";
 import { FUNDS, GIVING_LIMITS, FEE } from "../lib/catalog.mjs";
 
+// Shown on the donor's emailed receipt (one-time gifts) and under the Donate button.
+// Accurate regardless of tax status; do not add "tax-deductible" wording here
+// until LEMI's exempt status is confirmed.
+export const GIFT_STATEMENT = "No goods or services were provided in exchange for this gift.";
+
 export function feeCoverCents(cents) {
   // Amount to add so that, after the card fee, LEMI receives the full gift.
   const gross = Math.ceil((cents + FEE.fixedCents) / (1 - FEE.percent));
@@ -52,6 +57,7 @@ export default async (req) => {
     metadata,
     success_url: `${SITE_URL}/payment-thanks.html?type=give&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${SITE_URL}/give.html`,
+    custom_text: { submit: { message: `Thank you for giving to Life Eternal Ministry International. ${GIFT_STATEMENT}` } },
   };
 
   if (monthly) {
@@ -59,7 +65,11 @@ export default async (req) => {
   } else {
     params.submit_type = "donate";
     params.customer_creation = "always";
-    params.payment_intent_data = { metadata };
+    params.payment_intent_data = {
+      metadata,
+      // Appears as custom text on the Stripe email receipt.
+      description: `${fund.label} to Life Eternal Ministry International Inc. ${GIFT_STATEMENT}`,
+    };
   }
 
   try {
