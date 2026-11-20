@@ -471,3 +471,11 @@ a.phase:hover{border-color:var(--gold);transform:translateY(-4px)}
 .amt[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-grad);color:var(--ink)}
 .fine-print{margin-top:1rem;font-size:.85rem;opacity:.75}
 button.btn:disabled{opacity:.6;cursor:wait}
+
+/* Desktop header: fit 8 links + CTA inside the 1120px container (added with the Give link) */
+@media (min-width:1321px){
+  .bar{gap:1rem}
+  .nav{gap:1.05rem}
+  .nav a{letter-spacing:.15em}
+  .bar-cta{padding-inline:1.1rem}
+}
