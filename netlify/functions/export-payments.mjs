@@ -1,4 +1,5 @@
-// GET /api/export-payments?year=2026[&account=giving]
+// GET /api/export-payments?year=2026[&account=giving][&mode=test]
+// Exports LIVE payments by default. Add &mode=test to see sandbox payments.
 // Header: Authorization: Bearer <LEMI_ADMIN_TOKEN>
 // Downloads a CSV of recorded payments, used to prepare year-end giving statements.
 import { listRecords } from "../lib/ledger.mjs";
@@ -35,14 +36,15 @@ export default async (req) => {
   const url = new URL(req.url);
   const year = url.searchParams.get("year") || String(new Date().getUTCFullYear());
   const account = url.searchParams.get("account");
-  if (!/^\d{4}$/.test(year) || (account && !["giving", "services"].includes(account))) {
+  const mode = url.searchParams.get("mode") || "live";
+  if (!/^\d{4}$/.test(year) || (account && !["giving", "services"].includes(account)) || !["live", "test"].includes(mode)) {
     return json({ error: "Bad parameters" }, 400);
   }
-  const csv = toCsv(await listRecords(year, account));
+  const csv = toCsv(await listRecords(year, account, mode));
   return new Response(csv, {
     headers: {
       "content-type": "text/csv; charset=utf-8",
-      "content-disposition": `attachment; filename="lemi-payments-${year}${account ? "-" + account : ""}.csv"`,
+      "content-disposition": `attachment; filename="lemi-payments-${mode === "test" ? "TEST-" : ""}${year}${account ? "-" + account : ""}.csv"`,
       "cache-control": "no-store",
     },
   });
