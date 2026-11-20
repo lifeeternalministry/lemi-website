@@ -60,7 +60,7 @@ The Give page is not linked from the menu yet. Add a **Give** link to the header
 
 ## Payment records and year-end statements
 
-Every completed payment is saved in Netlify Blobs (store `payments`). To download a year as a spreadsheet:
+Every completed payment is saved in Netlify Blobs (store `payments`), marked **live** or **test**. Each webhook records only its own account's payments (gifts → giving; tuition, events and dashboard invoices → services), so the shared sandbox doesn't create duplicates. To download a year of **live** payments as a spreadsheet (add `&mode=test` to see sandbox payments):
 
 ```
 curl -H "Authorization: Bearer YOUR_LEMI_ADMIN_TOKEN" \
