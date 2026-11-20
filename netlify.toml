@@ -1,0 +1,47 @@
+# Netlify settings for www.lifeeternalministry.com
+# Publish this folder as-is; there is no build step for the pages.
+[build]
+  publish = "."
+  # Payment code lives here. Functions only deploy through Git or the Netlify CLI,
+  # NOT drag-and-drop. See PAYMENTS-README.md.
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Common Wix addresses -> new pages, so old Google results and bookmarks still land somewhere.
+# Check your old site's addresses and add or adjust these before switching the domain.
+[[redirects]]
+  from = "/about-us"
+  to = "/about.html"
+  status = 301
+[[redirects]]
+  from = "/contact-us"
+  to = "/contact.html"
+  status = 301
+[[redirects]]
+  from = "/services-1"
+  to = "/services.html"
+  status = 301
+[[redirects]]
+  from = "/post/*"
+  to = "/blog.html"
+  status = 301

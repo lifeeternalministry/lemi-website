@@ -1,0 +1,10 @@
+{
+  "name": "lemi-site",
+  "private": true,
+  "type": "module",
+  "description": "Life Eternal Ministry International website + Stripe payment functions",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0",
+    "stripe": "^17.7.0"
+  }
+}
